@@ -54,20 +54,21 @@ router.get("/", authenticateToken, async (req, res) => {
 
         if (role === "admin") {
             // Admin can view all jobs
-            jobs = await Job.findAll({ include: [Company, User] });
+            jobs = await Job.findAll({});
         } else if (role === "recruiter") {
             // Recruiter can view only jobs from their company
             if (!companyId) {
                 return res.status(403).json({ error: "Recruiter must be linked to a company!" });
             }
-            jobs = await Job.findAll({ where: { company_id: companyId }, include: [Company, User] });
+            jobs = await Job.findAll({ where: { companyId: companyId }});
         } else {
             // Job seekers can view all jobs
-            jobs = await Job.findAll({ include: [Company, User] });
+            jobs = await Job.findAll({   });
         }
 
         res.json(jobs);
     } catch (error) {
+        console.log('error', error)
         res.status(500).json({ error: error.message });
     }
 });

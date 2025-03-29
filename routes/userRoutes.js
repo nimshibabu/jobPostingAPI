@@ -40,13 +40,13 @@ router.put("/:id", authenticateToken, async (req, res) => {
 
 router.post("/", async (req, res) => {
     try {
-        const { email, password } = req.body;
+        const { email, password, firstName, lastName,phoneNumber  } = req.body;
         if (!password) return res.status(400).json({ error: "Password is required" });
 
         const salt = await bcrypt.genSalt(10);
         const hashedPassword = await bcrypt.hash(password, salt);
 
-        const user = await User.create({  email, password: hashedPassword });
+        const user = await User.create({  email, password: hashedPassword, firstName, lastName, phoneNumber, companyId:0 });
         res.status(201).json({ message: "User created successfully", userId: user.id });
     } catch (error) {
         res.status(400).json({ error: error.message });
